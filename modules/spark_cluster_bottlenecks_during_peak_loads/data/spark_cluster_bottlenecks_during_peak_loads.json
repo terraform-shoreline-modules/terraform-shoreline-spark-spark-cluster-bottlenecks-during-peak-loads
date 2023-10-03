@@ -1,0 +1,186 @@
+{
+  "name": "spark_cluster_bottlenecks_during_peak_loads",
+  "description": "This incident type refers to a situation where a Spark cluster experiences performance bottlenecks when it is subjected to peak loads. In other words, the Spark cluster struggles to handle the high volume of requests it receives during times of heavy traffic or increased demand. This can lead to slower processing times, delays, or even system crashes. Identifying and resolving the root cause of the bottlenecks is crucial to ensure the smooth functioning of the Spark cluster during peak loads.",
+  "params": [
+    {
+      "name": "SPARK_PORT_NUMBER",
+      "value": ""
+    },
+    {
+      "name": "SPARK_CONFIG_FILE_PATH",
+      "value": ""
+    },
+    {
+      "name": "SPARK_LOG_FILE_PATH",
+      "value": ""
+    },
+    {
+      "name": "SPARK_PROCESS_NAME",
+      "value": ""
+    },
+    {
+      "name": "SPARK_CLUSTER_IP",
+      "value": ""
+    },
+    {
+      "name": "MEMORY_ALLOCATION_PER_NODE",
+      "value": ""
+    },
+    {
+      "name": "NUMBER_OF_WORKER_NODES",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Spark cluster bottlenecks during peak loads.\nThis incident type refers to a situation where a Spark cluster experiences performance bottlenecks when it is subjected to peak loads. In other words, the Spark cluster struggles to handle the high volume of requests it receives during times of heavy traffic or increased demand. This can lead to slower processing times, delays, or even system crashes. Identifying and resolving the root cause of the bottlenecks is crucial to ensure the smooth functioning of the Spark cluster during peak loads."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check Spark cluster's CPU usage during peak loads"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `top -bn1 | grep ${SPARK_PROCESS_NAME}`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check Spark cluster's memory usage during peak loads"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `free -m`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check Spark cluster's disk usage during peak loads"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `df -h`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if there are any network issues during peak loads"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `ping ${SPARK_CLUSTER_IP}`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if there are any open network connections during peak loads"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `netstat -an | grep ${SPARK_PORT_NUMBER}`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check Spark cluster's logs for any errors or warnings during peak loads"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `tail -n 500 ${SPARK_LOG_FILE_PATH}`"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check Spark cluster's configuration settings during peak loads"
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `cat ${SPARK_CONFIG_FILE_PATH}`"
+    },
+    {
+      "name": "cell_16",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if there are any other processes or applications competing for resources during peak loads"
+    },
+    {
+      "name": "cell_17",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `top -bn1`"
+    },
+    {
+      "name": "cell_18",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check system load averages during peak loads"
+    },
+    {
+      "name": "cell_19",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `uptime`"
+    },
+    {
+      "name": "cell_20",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Insufficient resources allocated to the Spark cluster, leading to bottlenecks during peak loads."
+    },
+    {
+      "name": "cell_21",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_check_cluster_status()"
+    },
+    {
+      "name": "cell_22",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Optimize the Spark cluster configuration by increasing the number of worker nodes and memory allocation per node to handle peak loads."
+    },
+    {
+      "name": "cell_23",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_update_spark_config($SPARK_CONFIG_FILE_PATH, $MEMORY_ALLOCATION_PER_NODE, $NUMBER_OF_WORKER_NODES)"
+    }
+  ]
+}
